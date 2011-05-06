@@ -1,0 +1,41 @@
+Dancing Links is a technique for speeding up exact cover searches. See
+these links for inspiration.
+
+    <http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz>
+    <http://en.wikipedia.org/wiki/Dancing_Links>
+    <http://cgi.cse.unsw.edu.au/~xche635/dlx_sodoku/>
+    <http://www.sudopedia.org/wiki/Dancing_Links>
+
+== Loose plan
+
+Implement exact cover search with Dancing Links in Perl 5, then C, then
+Perl 6. Solve these problems, if possible:
+
+* SEND MORE MONEY
+* N-queens
+* Pentominoes (see Knuth's paper above)
+* AVA patent hexagon matching
+* Sudoku
+* The xkcd knapsack problem <http://xkcd.com/287/>
+* Map coloring
+* Nonogram
+
+That should be more than enough. :-)
+
+But the actual search -- while interesting in itself, and important to get
+right -- wouldn't be the focus of this project. Instead, the challenge
+would be to create adequate ways to *specify* the above problems, in ways
+that are as close as possible to the way a person would specify the problem
+to another person.
+
+This way, we approach the dream of specifying problems not in the way the
+computer expects, but in the way we expect.
+
+ <http://www.moserware.com/2008/04/towards-moores-law-software-part-3-of-3.html>
+
+All the exact cover problems can be re-stated as big, boring matrices. The
+filters/preprocessors that we write would take a human problem specification
+and translate it to a boring matrix. The solution could then be mapped onto
+the original problem specification, making it extremely readable for the one
+specifying the problem. The boring matrices are error-prone and, well,
+boring. But this way, all the user sees is her own "views" of the problem.
