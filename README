@@ -11,14 +11,15 @@ these links for inspiration.
 Implement exact cover search with Dancing Links in Perl 5, then C, then
 Perl 6. Solve these problems, if possible:
 
-* SEND MORE MONEY
-* N-queens
+* SEND+MORE=MONEY and other alphametics problems
+* N-queens: both 2D (grid) version and 1D (row) version
 * Pentominoes (see Knuth's paper above)
 * AVA patent hexagon matching
 * Sudoku
 * The xkcd knapsack problem <http://xkcd.com/287/>
 * Map coloring
 * Nonogram
+* Magic square
 
 That should be more than enough. :-)
 
