@@ -16,3 +16,25 @@ In summary, the data flows like this through the appliction:
      human-             zero-one         set of                human-
     readable             matrix           rows                readable
      input ==> [ Reader ] ===> [ Solver ] ===> [ Writer ] ===> output
+
+In mathematical terms, this could be seen as solving the problem under
+a transformation:
+
+    human    parsing   algorithm
+    input ===========>   input
+           [ Reader ]
+                           ||
+                           \/
+
+                        [ Solver ]
+    
+                           ||
+                           \/
+    
+    human    rendering  algorithm
+    output <===========   output
+            [ Writer ]
+
+In the above diagram, the missing arrow between "human input" and
+"human output" is the function we're after. And that's the total effect
+of the program.
