@@ -13,6 +13,6 @@ problem.
 
 In summary, the data flows like this through the appliction:
 
-    human-             zero-one         set of                human-
-   readable             matrix           rows                readable
-    input ==> [ Reader ] ===> [ Solver ] ===> [ Writer ] ===> output
+     human-             zero-one         set of                human-
+    readable             matrix           rows                readable
+     input ==> [ Reader ] ===> [ Solver ] ===> [ Writer ] ===> output
