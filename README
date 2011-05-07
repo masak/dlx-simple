@@ -12,6 +12,10 @@ Implement exact cover search with Dancing Links in Perl 5, then C, then
 Perl 6. Solve these problems, if possible:
 
 * SEND+MORE=MONEY and other alphametics problems
+  (an interesting variant is 
+     SEND+MOST=MONEY 
+   where the object is to find all solutions which
+   maximizes MONEY)
 * N-queens: both 2D (grid) version and 1D (row) version
 * Pentominoes (see Knuth's paper above)
 * AVA patent hexagon matching
