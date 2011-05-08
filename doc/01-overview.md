@@ -15,7 +15,7 @@ In summary, the data flows like this through the appliction:
 
      human-             zero-one         set of                human-
     readable             matrix           rows                readable
-     input ==> [ Reader ] ===> [ Solver ] ===> [ Writer ] ===> output
+     input ====[ Reader ]====> [ Solver ] =====[ Writer ]====> output
 
 In mathematical terms, this could be seen as solving the problem under
 a transformation:
@@ -24,10 +24,9 @@ a transformation:
     input ===========>   input
            [ Reader ]
                            ||
-                           \/
-
+                           ||
                         [ Solver ]
-    
+                           ||
                            ||
                            \/
     
@@ -35,6 +34,6 @@ a transformation:
     output <===========   output
             [ Writer ]
 
-In the above diagram, the missing arrow between "human input" and
-"human output" is the function we're after. And that's the total effect
-of the program.
+The downwards arrow on the right is what the computer is good at. The
+missing downwards arrow on the left is the function we (as humans) are
+after. And that's the total effect of the program.
