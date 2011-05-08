@@ -1,7 +1,8 @@
 PROBLEM CLASSES CLASS DIAGRAM
 -----------------------------
 
-Here are some problem classes and their relations.
+Here are some problem classes and their relations. Most of these have
+MiniZinc models over at <http://www.hakank.org/minizinc/>.
 
 
 - SEND+MORE=MONEY (and the optimization version SEND+MOST=MONEY)
