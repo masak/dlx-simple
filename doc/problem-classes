@@ -1,0 +1,94 @@
+PROBLEM CLASSES CLASS DIAGRAM
+-----------------------------
+
+Here are some problem classes and their relations.
+
+
+- SEND+MORE=MONEY (and the optimization version SEND+MOST=MONEY)
+- N-queens: 2D (grid) version
+- Pentominoes
+- Sudoku
+- Nonogram
+- Magic square
+
+- AVA patent hexagon matching
+- The xkcd knapsack problem <http://xkcd.com/287/>
+- Map coloring
+
+[xxx]: means a specific constraint type
+
+
+                                       Grid puzzle
+         ---------------------------------------------------------------------------------------------
+      /    /   /        |              |            |                       |     |
+     /    /   /         |              |           [sum row/column]         |    [path/tour based]
+nonogram /   /          |              |            |   |    |  |            |     |       |     |
+        /   /           |          map coloring?    |   |    |  |            |     |     Knights path
+      pentominioes      |                           |   |   [global alldiff] ---- Hidato         |
+          /             |                         alphametic |  |            |              Rogo puzzle
+         /              |                         [*]   |    |  Survo puzzle |              [...]
+      (minesweeper?)    |                               |    |               |  
+                  Latin Square                          | magic squares    [no conflict] 
+                  [alldiff on rows/columns]             | [sum diagonals]    |
+                    /|   |         |     |              |                    |
+                   / |  Quasigroup |    Futoshiki       |                    |
+                  /  |  completion |    [> contraints]  knapsack?            |
+                 /   |   |         |                                         |
+                /    |   |         |                                    N-queens (2D)   
+               /     |   |         |                                        (|)
+              /      |   |         |                                        (|)
+            [different sub section/cage                                     (|)
+             constraints              ]                                  (N-queens (1D))
+           /         |   |         |                        
+         Strimko     | Sudoku      |
+        ["strings"]  | [sub grid]  |
+                     |             |
+                     [sums as clues]
+                     |             |
+                   Killer       KenKen
+                   Sudoku  
+
+
+
+A note about alphametic puzzles
+-------------------------------
+At least one part of alphametic puzzles can be 
+designed as a grid problem, which is how 
+Integer Programming represents it.
+
+For the SEND+MORE=MONEY problem each 
+digit is represented by a row and the
+values one column:
+
+       0 1 2 3 4 5 6 7 8 9
+       -------------------
+     S|                   |   Sum() = 1
+     E|                   |   Sum() = 1
+     N|                   |   ....
+     D|                   |
+     M|                   |
+     O|                   |
+     R|                   |
+     Y|                   |
+     A|                   |
+     B|                   |   Sum() = 1
+      ---------------------
+       | | | | | | | | | |
+      Sum()=1 .......Sum()=1
+
+The following two constraints handle the 
+part that each variable (row) should be distinct
+and that each value is to be assigned to at most
+one variable:
+  - the sum of each row = 1
+  - the sum of each column = 1
+    (or <= 1 depending on the representation)
+
+However, alphametic puzzle also needs arithmetical
+constraints, such as for SEND+MORE=MONEY
+
+            1000*S + 100*E + 10*N + D  +  
+            1000*M + 100*O + 10*R + E  = 
+  10000*M + 1000*O + 100*N + 10*E + Y 
+
+(This can also be represented using extra carry variables.)
