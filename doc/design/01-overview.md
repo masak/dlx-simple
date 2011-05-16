@@ -13,6 +13,7 @@ problem.
 
 In summary, the data flows like this through the appliction:
 
+                         sparse
      human-             zero-one         set of                human-
     readable             matrix           rows                readable
      input ====[ Reader ]====> [ Solver ] =====[ Writer ]====> output
