@@ -108,4 +108,16 @@ test_solve [], [], 'empty matrix gives no solutions';
     test_solve sparsify($matrix), [[0, 1]], 'only one solution';
 }
 
+{
+    my $matrix = [
+        [0, 0, 1, 0, 1, 1, 0],
+        [1, 0, 0, 1, 0, 0, 1],
+        [0, 1, 1, 0, 0, 1, 0],
+        [1, 0, 0, 1, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 1],
+        [0, 0, 0, 1, 1, 0, 1],
+    ];
+    test_solve sparsify($matrix), [[0, 3, 4]], q[Knuth's example];
+}
+
 done_testing;

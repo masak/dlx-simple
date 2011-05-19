@@ -8,7 +8,7 @@ has 'writer' => (is => 'ro', isa => 'Writer',
                  default => sub { Writer::Rowset->new() });
 
 sub max {
-    my $max = shift(@_) // die "&max needs at least one value";
+    my $max = 0; # which is fine in our case
     for (@_) {
         if ($max < $_) {
             $max = $_;
@@ -24,12 +24,13 @@ sub width {
 }
 
 sub search {
-    my ($matrix, $writer, $column, $rows_ref, $covered_columns_ref) = @_;
+    my ($matrix, $writer, $column, $rows_ref, $covered_columns_ref,
+        $width) = @_;
     $column              //= 0;
     $rows_ref            //= [];
     $covered_columns_ref //= [];
+    $width               //= width($matrix);
 
-    my $width = width($matrix);
     if ($column >= $width) {
         $writer->write([@{$rows_ref}]);
         return;
@@ -37,20 +38,32 @@ sub search {
 
     if (grep { $_ == $column } @{$covered_columns_ref}) {
         search($matrix, $writer, $column + 1, $rows_ref,
-               $covered_columns_ref);
+               $covered_columns_ref, $width);
         return;
     }
 
     my $height = scalar @{$matrix};
     for my $row (0..$height-1) {
-        if (grep { $_ == $column } @{$matrix->[$row]}) {
-            push @{$rows_ref}, $row;
-            push @{$covered_columns_ref}, @{$matrix->[$row]};
-            search($matrix, $writer, $column + 1, $rows_ref,
-                   $covered_columns_ref);
-            pop @{$covered_columns_ref} for @{$matrix->[$row]};
-            pop @{$rows_ref};
+        next unless grep { $_ == $column } @{$matrix->[$row]};
+
+        push @{$rows_ref}, $row;
+        push @{$covered_columns_ref}, @{$matrix->[$row]};
+        my @deleted_rows;
+        for my $covered_column (@{$matrix->[$row]}) {
+            for my $i (0..$height-1) {
+                next unless grep { $_ == $covered_column } @{$matrix->[$i]};
+                $deleted_rows[$i] = $matrix->[$i];
+                $matrix->[$i] = [];
+            }
         }
+        search($matrix, $writer, $column + 1, $rows_ref,
+               $covered_columns_ref, $width);
+        for my $i (0..@deleted_rows-1) {
+            next unless defined $deleted_rows[$i];
+            $matrix->[$i] = $deleted_rows[$i];
+        }
+        pop @{$covered_columns_ref} for @{$matrix->[$row]};
+        pop @{$rows_ref};
     }
 }
 
