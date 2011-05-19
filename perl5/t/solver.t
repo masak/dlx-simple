@@ -45,18 +45,6 @@ sub test_solve {
     output_eqv \@output, $expected_output, $description;
 }
 
-test_solve [], [], 'empty matrix gives no solutions';
-
-test_solve [[0], [1], [2]], [[0, 1, 2]], 'identity matrix gives all lines';
-
-test_solve [[0], [0], [1], [1]],
-           [[0, 2], [0, 3], [1, 2], [1, 3]],
-           '2 x 2 candidates gives 4 solutions';
-
-test_solve [[0], [1], [0], [1]],
-           [[0, 1], [0, 3], [1, 2], [2, 3]],
-           'same rows in different order';
-
 sub sparsify {
     my ($matrix) = @_;
     return [] unless @{$matrix};
@@ -73,6 +61,43 @@ sub sparsify {
         push @sparse_matrix, \@sparse_row;
     }
     return \@sparse_matrix;
+}
+
+test_solve [], [], 'empty matrix gives no solutions';
+
+{
+    my $matrix = [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ];
+    test_solve sparsify($matrix),
+               [[0, 1, 2]],
+               'identity matrix gives all lines';
+}
+
+{
+    my $matrix = [
+        [1, 0],
+        [1, 0],
+        [0, 1],
+        [0, 1],
+    ];
+    test_solve sparsify($matrix),
+               [[0, 2], [0, 3], [1, 2], [1, 3]],
+               '2 x 2 candidates gives 4 solutions';
+}
+
+{
+    my $matrix = [
+        [1, 0],
+        [0, 1],
+        [1, 0],
+        [0, 1],
+    ];
+    test_solve sparsify($matrix),
+               [[0, 1], [0, 3], [1, 2], [2, 3]],
+               'same rows in different order';
 }
 
 {
