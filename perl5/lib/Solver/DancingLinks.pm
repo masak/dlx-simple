@@ -24,7 +24,10 @@ sub width {
 }
 
 sub search {
-    my ($matrix, $writer, $column, $rows_ref) = @_;
+    my ($matrix, $writer, $column, $rows_ref, $covered_columns_ref) = @_;
+    $column              //= 0;
+    $rows_ref            //= [];
+    $covered_columns_ref //= [];
 
     my $width = width($matrix);
     if ($column >= $width) {
@@ -32,11 +35,20 @@ sub search {
         return;
     }
 
+    if (grep { $_ == $column } @{$covered_columns_ref}) {
+        search($matrix, $writer, $column + 1, $rows_ref,
+               $covered_columns_ref);
+        return;
+    }
+
     my $height = scalar @{$matrix};
     for my $row (0..$height-1) {
         if (grep { $_ == $column } @{$matrix->[$row]}) {
             push @{$rows_ref}, $row;
-            search($matrix, $writer, $column + 1, $rows_ref);
+            push @{$covered_columns_ref}, @{$matrix->[$row]};
+            search($matrix, $writer, $column + 1, $rows_ref,
+                   $covered_columns_ref);
+            pop @{$covered_columns_ref} for @{$matrix->[$row]};
             pop @{$rows_ref};
         }
     }
@@ -48,8 +60,7 @@ sub solve {
     return unless @{$matrix};
 
     my $writer = $self->writer;
-
-    search($matrix, $writer, 0, []);
+    search($matrix, $writer);
 }
 
 1;
