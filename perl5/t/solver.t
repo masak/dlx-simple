@@ -20,6 +20,11 @@ sub test_solve {
 }
 
 test_solve [], [], 'empty matrix gives no solutions';
+
 test_solve [[0], [1], [2]], [[0, 1, 2]], 'identity matrix gives all lines';
+
+test_solve [[0], [0], [1], [1]],
+           [[0, 2], [0, 3], [1, 2], [1, 3]],
+           '2 x 2 candidates gives 4 solutions';
 
 done_testing;
