@@ -25,3 +25,12 @@ will format the solutions in some way or other.
 
 (See `04-writer.md` for more on `Writer`s, and `02-reader.md` for more
 on how to create them from a `Reader`.)
+
+An optional integer argument `primaries` may be passed, which
+denotes how many of the columns in the matrix are to be considered
+primary columns. In the exact cover algorithm, a primary column needs
+to be covered *exactly* once, whereas a secondary column only needs
+to be covered *at most* once. A value `$p` for this argument will make
+the first `$p` columns in the matrix primary columns, and the
+remaining columns secondary columns. If no such argument is passed in,
+it is assumed that all columns in the matrix are primary columns.
