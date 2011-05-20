@@ -63,7 +63,7 @@ sub sparsify {
     return \@sparse_matrix;
 }
 
-test_solve [], [], 'empty matrix gives no solutions';
+test_solve [], [[]], 'empty matrix gives one solution';
 
 {
     my $matrix = [
