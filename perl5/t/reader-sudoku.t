@@ -30,6 +30,12 @@ EOD
 
     my $matrix = $reader->matrix;
     is ref($matrix), 'ARRAY', '$reader->matrix returns an arrayref';
+
+    my $SIZE = 4;
+    my $NUMBERS = 4;
+    is scalar(@{$matrix}),
+       $SIZE * $SIZE * $NUMBERS,
+       'matrix has the right number of rows';
 }
 
 done_testing;

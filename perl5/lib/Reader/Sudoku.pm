@@ -8,7 +8,16 @@ has 'matrix' => (
 );
 
 sub _build_matrix {
-    return [];
+    my $size = 4;
+    my @rows;
+    for my $r (1..$size) {
+        for my $c (1..$size) {
+            for my $n (1..$size) {
+                push @rows, undef;
+            }
+        }
+    }
+    return \@rows;
 }
 
 1;
