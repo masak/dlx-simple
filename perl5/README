@@ -1,0 +1,7 @@
+Perl 5 implementation of dlx-simple.
+
+The tests can be run by issuing the command
+
+    prove -l
+
+in the current directory.
