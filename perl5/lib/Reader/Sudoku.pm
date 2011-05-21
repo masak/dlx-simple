@@ -8,12 +8,24 @@ has 'matrix' => (
 );
 
 sub _build_matrix {
-    my $size = 4;
+    my $SIZE = 4;
+    my $NUMBERS = 4;
+    my ($NS0, $NS1, $NS2, $NS3) = map { $NUMBERS + $SIZE * $_ } 0..3;
     my @rows;
-    for my $r (1..$size) {
-        for my $c (1..$size) {
-            for my $n (1..$size) {
-                push @rows, undef;
+    my $sqrt_size = sqrt $SIZE;
+    for my $r (1..$SIZE) {
+        my $coarse_row = int(($r - 1) / $sqrt_size);
+        for my $c (1..$SIZE) {
+            my $coarse_column = int(($c - 1) / $sqrt_size);
+            my $m = $coarse_row * $sqrt_size + $coarse_column + 1;
+
+            for my $n (1..$NUMBERS) {
+                my @row = (0) x $NS3;
+                $row[       $n - 1] = 1;
+                $row[$NS0 + $r - 1] = 1;
+                $row[$NS1 + $c - 1] = 1;
+                $row[$NS2 + $m - 1] = 1;
+                push @rows, \@row;
             }
         }
     }
