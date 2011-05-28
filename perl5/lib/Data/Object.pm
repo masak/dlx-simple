@@ -1,5 +1,6 @@
 package Data::Object;
 use Moose::Role;
+use MooseX::Params::Validate;
 
 has 'L' => (is => 'rw', isa => 'Data::Object', builder => '_point_to_self');
 has 'R' => (is => 'rw', isa => 'Data::Object', builder => '_point_to_self');
@@ -13,11 +14,11 @@ sub _point_to_self {
 }
 
 sub attach_below {
-    my ($self, $other) = @_;
-
-    # XXX: Should do typechecking of $other here with
-    #      MooseX::Params::Validate, but am offline
-    #      and don't have the module.
+    my $self = shift;
+    my ($other) = pos_validated_list(
+        \@_,
+        { isa => 'Data::Object' },
+    );
 
     $other->D->U($self);
     $self->D($other->D);
@@ -27,11 +28,11 @@ sub attach_below {
 }
 
 sub attach_to_right_of {
-    my ($self, $other) = @_;
-
-    # XXX: Should do typechecking of $other here with
-    #      MooseX::Params::Validate, but am offline
-    #      and don't have the module.
+    my $self = shift;
+    my ($other) = pos_validated_list(
+        \@_,
+        { isa => 'Data::Object' },
+    );
 
     $other->R->L($self);
     $self->R($other->R);
@@ -41,11 +42,11 @@ sub attach_to_right_of {
 }
 
 sub attach_to_left_of {
-    my ($self, $other) = @_;
-
-    # XXX: Should do typechecking of $other here with
-    #      MooseX::Params::Validate, but am offline
-    #      and don't have the module.
+    my $self = shift;
+    my ($other) = pos_validated_list(
+        \@_,
+        { isa => 'Data::Object' },
+    );
 
     $other->attach_to_right_of($self);
 }
