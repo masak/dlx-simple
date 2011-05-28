@@ -34,3 +34,9 @@ to be covered *at most* once. A value `$p` for this argument will make
 the first `$p` columns in the matrix primary columns, and the
 remaining columns secondary columns. If no such argument is passed in,
 it is assumed that all columns in the matrix are primary columns.
+
+Another optional argument `column_choice` denotes the way the next
+column to cover is to be selected in the algorithm. The choice of column
+at each step can greatly affect the running time of the algorithm.
+`column_choice`, if passed, needs to be of type `ColumnChoice`. The
+default is `ColumnChoice::MinimizeOnes`.
