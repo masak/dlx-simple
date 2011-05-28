@@ -81,7 +81,7 @@ sub _build_linked_representation {
 sub choose_column {
     my ($self) = @_;
     my $h = $self->linked_matrix;
-    # For now, we just make the simples possible choice.
+    # For now, we just make the simplest possible choice.
     # We'll want to make this a Strategy later.
     return $h->R;
 }
