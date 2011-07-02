@@ -1,6 +1,12 @@
 package Reader::Sudoku;
 use Moose;
 
+has 'body' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+);
+
 has 'matrix' => (
     is      => 'ro',
     lazy    => 1,
@@ -8,8 +14,14 @@ has 'matrix' => (
 );
 
 sub _build_matrix {
-    my $SIZE = 4;
-    my $NUMBERS = 4;
+    my $self = shift;
+
+    my $SIZE = 9;
+    if ($self->body) {
+        $SIZE = 4;
+    }
+    my $NUMBERS = $SIZE;
+
     my ($NS0, $NS1, $NS2, $NS3) = map { $NUMBERS + $SIZE * $_ } 0..3;
     my @rows;
     my $sqrt_size = sqrt $SIZE;
