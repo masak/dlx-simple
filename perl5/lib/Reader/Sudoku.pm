@@ -18,7 +18,13 @@ sub _build_matrix {
 
     my $SIZE = 9;
     if ($self->body) {
-        $SIZE = 4;
+        my $nonempty_rows = 0;
+        for (split("\n", $self->body)) {
+            unless ($_ eq "") {
+                $nonempty_rows++;
+            }
+        }
+        $SIZE = $nonempty_rows;
     }
     my $NUMBERS = $SIZE;
 
