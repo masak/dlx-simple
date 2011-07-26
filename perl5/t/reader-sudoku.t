@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Exception;
 
 use Reader::Sudoku;
 
@@ -170,6 +171,17 @@ EOD
     );
 
     is_sudoku_matrix($reader->matrix, 4);
+}
+
+{
+    my $header = { size => 5 };
+    my $body = outdent(<<'EOD');
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/not a square/, 'non-square exception caught okay';
 }
 
 done_testing;

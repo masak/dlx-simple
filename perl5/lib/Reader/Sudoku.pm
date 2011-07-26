@@ -13,16 +13,26 @@ has 'body' => (
     required => 1,
 );
 
+has 'size' => (
+    is       => 'rw',
+    isa      => 'Int',
+    init_arg => undef,
+);
+
 has 'matrix' => (
     is      => 'ro',
     lazy    => 1,
     builder => '_build_matrix',
 );
 
-sub _build_matrix {
+sub BUILD {
     my $self = shift;
 
-    my $SIZE = exists $self->header->{size} ? $self->header->{size} : 9;
+    my $size = 9;
+    if (exists $self->header->{size}) {
+        $size = $self->header->{size};
+    }
+
     if ($self->body) {
         my $nonempty_rows = 0;
         for (split("\n", $self->body)) {
@@ -30,8 +40,19 @@ sub _build_matrix {
                 $nonempty_rows++;
             }
         }
-        $SIZE = $nonempty_rows;
+        $size = $nonempty_rows;
     }
+
+    die "$size is not a square"
+        unless sqrt($size) == int(sqrt($size));
+
+    $self->size($size);
+}
+
+sub _build_matrix {
+    my $self = shift;
+
+    my $SIZE = $self->size;
     my $NUMBERS = $SIZE;
 
     my ($NS0, $NS1, $NS2, $NS3) = map { $NUMBERS + $SIZE * $_ } 0..3;
