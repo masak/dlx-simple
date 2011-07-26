@@ -28,11 +28,7 @@ has 'matrix' => (
 sub BUILD {
     my $self = shift;
 
-    my $size = 9;
-    if (exists $self->header->{size}) {
-        $size = $self->header->{size};
-    }
-
+    my $size_from_body;
     if ($self->body) {
         my $nonempty_rows = 0;
         for (split("\n", $self->body)) {
@@ -40,8 +36,18 @@ sub BUILD {
                 $nonempty_rows++;
             }
         }
-        $size = $nonempty_rows;
+        $size_from_body = $nonempty_rows;
     }
+
+    my $size_from_header = $self->header->{size};
+
+    die "header says $size_from_header but body says $size_from_body"
+        if defined $size_from_body && defined $size_from_header
+           && $size_from_header != $size_from_body;
+
+    my $size = defined $size_from_header ? $size_from_header
+             : defined $size_from_body   ? $size_from_body
+             : 9;
 
     die "$size is not a square"
         unless sqrt($size) == int(sqrt($size));

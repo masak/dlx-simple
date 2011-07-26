@@ -184,6 +184,23 @@ EOD
     ) } qr/not a square/, 'non-square exception caught okay';
 }
 
+{
+    my $header = { size => 9 };
+    my $body = outdent(<<'EOD');
+    .. ..
+    .. ..
+    
+    .. ..
+    .. ..
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/header says 9 but body says 4/,
+        'header/body inconsistent caught okay';
+}
+
 done_testing;
 
 # More things to test:
@@ -191,4 +208,3 @@ done_testing;
 # - badly-formed body
 # - body with values
 # - body with illegal values
-# - header and body inconsistent
