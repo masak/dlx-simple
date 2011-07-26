@@ -159,11 +159,23 @@ EOD
     is_sudoku_matrix($reader->matrix, 16);
 }
 
+{
+    my $header = { size => 4 };
+    my $body = outdent(<<'EOD');
+EOD
+
+    my $reader = Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    );
+
+    is_sudoku_matrix($reader->matrix, 4);
+}
+
 done_testing;
 
 # More things to test:
 #
-# - empty body with size given in header
 # - badly-formed body
 # - body with values
 # - body with illegal values

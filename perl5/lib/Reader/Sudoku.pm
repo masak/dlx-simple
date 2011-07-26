@@ -1,6 +1,12 @@
 package Reader::Sudoku;
 use Moose;
 
+has 'header' => (
+    is       => 'ro',
+    isa      => 'HashRef[Str]',
+    required => 1,
+);
+
 has 'body' => (
     is       => 'ro',
     isa      => 'Str',
@@ -16,7 +22,7 @@ has 'matrix' => (
 sub _build_matrix {
     my $self = shift;
 
-    my $SIZE = 9;
+    my $SIZE = exists $self->header->{size} ? $self->header->{size} : 9;
     if ($self->body) {
         my $nonempty_rows = 0;
         for (split("\n", $self->body)) {
