@@ -32,9 +32,8 @@ sub BUILD {
     if ($self->body) {
         my $nonempty_rows = 0;
         for (split("\n", $self->body)) {
-            unless ($_ eq "") {
-                $nonempty_rows++;
-            }
+            next unless $_;
+            $nonempty_rows++;
         }
         $size_from_body = $nonempty_rows;
     }
@@ -53,6 +52,23 @@ sub BUILD {
         unless sqrt($size) == int(sqrt($size));
 
     $self->size($size);
+
+    if ($self->body) {
+        my $ssqrt = sqrt $size;
+        for my $line (split /\n/, $self->body) {
+            next unless $line;
+            my $c = 1;
+            for (split //, $line) {
+                while ($line) {
+                    $line =~ s/^ \s* (\S+) //x;
+                    my $blockwidth = length($1);
+                    die "Block is $blockwidth chars wide; expected $ssqrt: $1"
+                        unless $blockwidth == $ssqrt;
+                    $line =~ s/^ \s+ //x;
+                }
+            }
+        }
+    }
 }
 
 sub _build_matrix {

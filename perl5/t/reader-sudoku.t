@@ -201,10 +201,26 @@ EOD
         'header/body inconsistent caught okay';
 }
 
+{
+    my $header = {};
+    my $body = outdent(<<'EOD');
+    ....
+    ....
+    
+    ....
+    ....
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/Block is 4 chars wide; expected 2/,
+        'missing empty column caught okay';
+}
+
 done_testing;
 
 # More things to test:
 #
-# - badly-formed body
 # - body with values
 # - body with illegal values
