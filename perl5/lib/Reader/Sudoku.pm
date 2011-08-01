@@ -54,7 +54,20 @@ sub BUILD {
     $self->size($size);
 
     if ($self->body) {
+        sub align {
+            my ($s1, $s2) = @_;
+            $s1 = $s1 . " " x (length($s2)-length($s1));
+            $s2 = $s2 . " " x (length($s1)-length($s2));
+            for (0..length($s1)-1) {
+                return ''
+                    if  substr($s1, $_, 1) eq " "
+                    xor substr($s2, $_, 1) eq " ";
+            }
+            return 1;
+        }
+
         my $ssqrt = sqrt $size;
+        my $first_line = (split /\n/, $self->body)[0];
         my $l = 0;
         my $after_empty_line = 1;
         for my $line (split /\n/, $self->body) {
@@ -66,6 +79,8 @@ sub BUILD {
                 if $l % $ssqrt == 0 && !$after_empty_line;
             $after_empty_line = '';
             $l++;
+            die "Row out of alignment: $line"
+                unless align($first_line, $line);
             my $c = 1;
             for (split //, $line) {
                 while ($line) {

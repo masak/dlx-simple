@@ -234,6 +234,23 @@ EOD
         'missing empty row caught okay';
 }
 
+{
+    my $header = {};
+    my $body = outdent(<<'EOD');
+    .. ..
+    .. ..
+
+    .. ..
+     .. ..
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/Row out of alignment/,
+        'misaligned row caught okay';
+}
+
 done_testing;
 
 # More things to test:
