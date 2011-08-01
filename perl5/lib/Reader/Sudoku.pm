@@ -55,8 +55,17 @@ sub BUILD {
 
     if ($self->body) {
         my $ssqrt = sqrt $size;
+        my $l = 0;
+        my $after_empty_line = 1;
         for my $line (split /\n/, $self->body) {
-            next unless $line;
+            unless ($line) {
+                $after_empty_line = 1;
+                next;
+            }
+            die "Expected empty row; found content"
+                if $l % $ssqrt == 0 && !$after_empty_line;
+            $after_empty_line = '';
+            $l++;
             my $c = 1;
             for (split //, $line) {
                 while ($line) {

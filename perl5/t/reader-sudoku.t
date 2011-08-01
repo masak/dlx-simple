@@ -218,6 +218,22 @@ EOD
         'missing empty column caught okay';
 }
 
+{
+    my $header = {};
+    my $body = outdent(<<'EOD');
+    .. ..
+    .. ..
+    .. ..
+    .. ..
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/Expected empty row; found content/,
+        'missing empty row caught okay';
+}
+
 done_testing;
 
 # More things to test:
