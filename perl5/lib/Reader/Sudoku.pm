@@ -23,6 +23,14 @@ has 'matrix' => (
     is      => 'ro',
     lazy    => 1,
     builder => '_build_matrix',
+    init_arg => undef,
+);
+
+has 'priors' => (
+    is       => 'ro',
+    lazy     => 1,
+    builder  => '_build_priors',
+    init_arg => undef,
 );
 
 sub BUILD {
@@ -121,6 +129,31 @@ sub _build_matrix {
         }
     }
     return \@rows;
+}
+
+sub _build_priors {
+    my $self = shift;
+
+    my $SIZE = $self->size;
+    my $NUMBERS = $SIZE;
+    my @priors;
+    my $row = 0;
+    for my $line (split /\n/, $self->body()) {
+        next unless $line;
+        $line =~ s/\s+//g;
+        my $column = 0;
+        for my $char (split //, $line) {
+            if ($char ne '.') {
+                die "XXX" if $char !~ /\d/;
+                my $value = $char - 1;
+                my $prior = $row * $NUMBERS * $SIZE + $column * $NUMBERS + $value;
+                push @priors, $prior;
+            }
+            $column++;
+        }
+        $row++;
+    }
+    return [@priors];
 }
 
 1;
