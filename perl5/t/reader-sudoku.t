@@ -323,8 +323,21 @@ EOD
     );
 }
 
-done_testing;
+{
+    my $header = {};
+    my $body = outdent(<<'EOD');
+    .. ..
+    .. 5.
 
-# More things to test:
-#
-# - body with illegal values
+    .. ..
+    .. ..
+EOD
+
+    throws_ok { Reader::Sudoku->new(
+        header => $header,
+        body   => $body,
+    ) } qr/Value out of range/,
+        'value out of range caught okay';
+}
+
+done_testing;

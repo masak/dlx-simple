@@ -91,13 +91,15 @@ sub BUILD {
                 unless align($first_line, $line);
             my $c = 1;
             for (split //, $line) {
-                while ($line) {
-                    $line =~ s/^ \s* (\S+) //x;
-                    my $blockwidth = length($1);
-                    die "Block is $blockwidth chars wide; expected $ssqrt: $1"
-                        unless $blockwidth == $ssqrt;
-                    $line =~ s/^ \s+ //x;
-                }
+                die "Value out of range: $_ > $size"
+                    if /\d/ && $_ > $size;
+            }
+            while ($line) {
+                $line =~ s/^ \s* (\S+) //x;
+                my $blockwidth = length($1);
+                die "Block is $blockwidth chars wide; expected $ssqrt: $1"
+                    unless $blockwidth == $ssqrt;
+                $line =~ s/^ \s+ //x;
             }
         }
     }
