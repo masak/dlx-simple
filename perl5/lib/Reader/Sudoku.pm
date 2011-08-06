@@ -1,3 +1,7 @@
+use 5.010;
+
+use Writer::Sudoku;
+
 package Reader::Sudoku;
 use Moose;
 
@@ -26,10 +30,10 @@ has 'matrix' => (
     init_arg => undef,
 );
 
-has 'priors' => (
-    is       => 'ro',
+has 'writer' => (
+    is       => 'rw',
     lazy     => 1,
-    builder  => '_build_priors',
+    builder  => '_build_writer',
     init_arg => undef,
 );
 
@@ -111,26 +115,110 @@ sub _build_matrix {
     my $SIZE = $self->size;
     my $NUMBERS = $SIZE;
 
-    my ($NS0, $NS1, $NS2, $NS3) = map { $NUMBERS + $SIZE * $_ } 0..3;
-    my @rows;
     my $sqrt_size = sqrt $SIZE;
-    for my $r (1..$SIZE) {
-        my $coarse_row = int(($r - 1) / $sqrt_size);
-        for my $c (1..$SIZE) {
-            my $coarse_column = int(($c - 1) / $sqrt_size);
-            my $m = $coarse_row * $sqrt_size + $coarse_column + 1;
 
-            for my $n (1..$NUMBERS) {
-                my @row = (0) x $NS3;
-                $row[       $n - 1] = 1;
-                $row[$NS0 + $r - 1] = 1;
-                $row[$NS1 + $c - 1] = 1;
-                $row[$NS2 + $m - 1] = 1;
-                push @rows, \@row;
+    # Placing a value $v in row $r, column $c, minibox $m
+    # means the following:
+    #
+    # * This location is taken (rows x columns)
+    # * This number in this row is taken (numbers x rows)
+    # * This number in this column is taken (numbers x columns)
+    # * This number in this minibox is taken (numbers x miniboxes)
+    my $NS1 =           $SIZE * $SIZE;
+    my $NS2 = $NS1 + $NUMBERS * $SIZE;
+    my $NS3 = $NS2 + $NUMBERS * $SIZE;
+    my $NS4 = $NS3 + $NUMBERS * $SIZE;
+
+    my @rows;
+    my @mapping;
+    for my $r (0..$SIZE-1) {
+        my $coarse_row = int($r / $sqrt_size);
+        for my $c (0..$SIZE-1) {
+            my $coarse_column = int($c / $sqrt_size);
+            my $m = $coarse_row * $sqrt_size + $coarse_column;
+
+            for my $n (0..$NUMBERS-1) {
+                push @rows, [
+                           $r * $SIZE    + $c,
+                    $NS1 + $r * $NUMBERS + $n,
+                    $NS2 + $c * $NUMBERS + $n,
+                    $NS3 + $m * $NUMBERS + $n,
+                ];
+                push @mapping, { r => $r, c => $c, n => $n + 1 };
             }
         }
     }
+
+    my @priors        = $self->_build_priors;
+    my @writer_priors = @mapping[ @priors ];
+
+    my %skip_columns;
+    for my $row (@priors) {
+        for my $column (@{$rows[$row]}) {
+            if (exists $skip_columns{$column}) {
+                # XXX: Should have much better diagnostics here.
+                #      Can get out all the information needed by
+                #      analyzing the rows involved and back-translating.
+                die "Impossible hints";
+            }
+            $skip_columns{$column} = $row; # that's why we save $row here
+        }
+    }
+    for my $column (keys %skip_columns) {
+        propagate_constraint(\@rows, \@mapping, $column);
+    }
+
+    @rows = compact(@rows);
+    $self->writer(Writer::Sudoku->new(
+        size    => $SIZE,
+        mapping => \@mapping,
+        priors  => \@writer_priors,
+    ));
     return \@rows;
+}
+
+sub propagate_constraint {
+    my ($matrix, $mapping, $c) = @_;
+
+    my @rows_with_c;
+    for my $row (0..@{$matrix}-1) {
+        if (grep { $c == $_ } @{$matrix->[$row]}) {
+            push @rows_with_c, $row;
+        }
+    }
+
+    for my $row (reverse @rows_with_c) {
+        splice @{$matrix},  $row, 1;
+        splice @{$mapping}, $row, 1;
+    }
+
+    return;
+}
+
+sub compact {
+    my (@rows) = @_;
+
+    my %remaining_columns;
+    for (@rows) {
+        @remaining_columns{ @{$_} } = (1) x @{$_};
+    }
+    my %numbering;
+    my $i;
+    for (sort { $a <=> $b } keys %remaining_columns) {
+        $numbering{$_} = $i++;
+    }
+
+    my @renumbered_rows;
+    for (@rows) {
+        push @renumbered_rows, [map { $numbering{$_} } @{$_}];
+    }
+    return @renumbered_rows;
+}
+
+sub _build_writer {
+    my $self = shift;
+    $self->_build_matrix;
+    return $self->writer;
 }
 
 sub _build_priors {
@@ -155,7 +243,7 @@ sub _build_priors {
         }
         $row++;
     }
-    return [@priors];
+    return @priors;
 }
 
 1;
