@@ -1,0 +1,21 @@
+#! /usr/bin/perl
+use 5.010;
+use strict;
+use warnings;
+
+use Reader::Sudoku;
+use Solver::DancingLinks;
+
+my $body = join '', <>;
+
+my $reader = Reader::Sudoku->new(
+    header => {},
+    body   => $body,
+);
+
+my $solver = Solver::DancingLinks->new(
+    matrix => $reader->matrix,
+    writer => $reader->writer,
+);
+
+$solver->solve();

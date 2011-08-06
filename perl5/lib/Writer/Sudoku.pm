@@ -33,6 +33,7 @@ sub write {
         my $r = $_->{r};
         $matrix->[$r][$c] = $n;
     }
+    say "";
     for my $row (0 .. $size-1) {
         say "" if $row % sqrt($size) == 0;
         for my $col (0 .. $size-1) {
@@ -43,7 +44,6 @@ sub write {
         }
         print "\n";
     }
-    say "";
 }
 
 1;
