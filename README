@@ -18,7 +18,6 @@ Perl 6. Solve these problems, if possible:
    maximizes MONEY)
 * N-queens: both 2D (grid) version and 1D (row) version
 * Pentominoes (see Knuth's paper above)
-* AVA patent hexagon matching
 * Sudoku
 * Hidato
 * The xkcd knapsack problem <http://xkcd.com/287/>
