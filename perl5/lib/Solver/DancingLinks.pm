@@ -122,39 +122,77 @@ sub uncover_column {
     $c->L->R($c);
 }
 
-{
-    my @O;
+our @O;
+sub solve {
+    my ($self) = @_;
+    local @O;
+    $self->_solve_helper();
+    return;
+}
 
-    # The variable names are chosen to correspond closely to the
-    # algorithm on page 5 in
-    # http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz
-    sub solve {
-        my ($self) = @_;
-        my $h = $self->linked_matrix;
+# The variable names are chosen to correspond closely to the
+# algorithm on page 5 in
+# http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz
+sub _solve_helper {
+    my ($self) = @_;
+    my $h = $self->linked_matrix;
 
-        if ($h->R eq $h) {
-            $self->writer->write([@O]);
-            return;
-        }
-
-        my $c = $self->choose_column;
-        cover_column($c);
-        for (my $r = $c->D; $r ne $c; $r = $r->D) {
-            push @O, $r->row;
-            for (my $j = $r->R; $j ne $r; $j = $j->R) {
-                cover_column($j->C);
-            }
-
-            $self->solve();
-
-            pop @O;
-            for (my $j = $r->L; $j ne $r; $j = $j->L) {
-                uncover_column($j->C);
-            }
-        }
-        uncover_column($c);
+    if ($h->R eq $h) {
+        $self->writer->write([@O]);
         return;
     }
+
+    my $c = $self->choose_column;
+    cover_column($c);
+    for (my $r = $c->D; $r ne $c; $r = $r->D) {
+        push @O, $r->row;
+        for (my $j = $r->R; $j ne $r; $j = $j->R) {
+            cover_column($j->C);
+        }
+
+        $self->_solve_helper();
+
+        pop @O;
+        for (my $j = $r->L; $j ne $r; $j = $j->L) {
+            uncover_column($j->C);
+        }
+    }
+    uncover_column($c);
+    return;
+}
+
+our $solutions;
+sub number_of_solutions {
+    my ($self) = @_;
+    local $solutions = 0;
+    $self->_number_of_solutions_helper();
+    return $solutions;
+}
+
+sub _number_of_solutions_helper {
+    my ($self) = @_;
+    my $h = $self->linked_matrix;
+
+    if ($h->R eq $h) {
+        $solutions++;
+        return;
+    }
+
+    my $c = $self->choose_column;
+    cover_column($c);
+    for (my $r = $c->D; $r ne $c; $r = $r->D) {
+        for (my $j = $r->R; $j ne $r; $j = $j->R) {
+            cover_column($j->C);
+        }
+
+        $self->_number_of_solutions_helper();
+
+        for (my $j = $r->L; $j ne $r; $j = $j->L) {
+            uncover_column($j->C);
+        }
+    }
+    uncover_column($c);
+    return;
 }
 
 __PACKAGE__->meta->make_immutable;
