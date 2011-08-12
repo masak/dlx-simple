@@ -6,11 +6,9 @@ use warnings;
 use Reader::Pentominoes;
 use Solver::DancingLinks;
 
-my $body = join '', <>;
-
 my $reader = Reader::Pentominoes->new(
     header => {},
-    body   => $body,
+    body   => "",   # it's ignored anyway right now
 );
 
 my $solver = Solver::DancingLinks->new(
