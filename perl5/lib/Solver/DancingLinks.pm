@@ -5,6 +5,8 @@ use Writer::Rowset;
 use Data::Node;
 use Data::Header;
 
+use constant INFINITY => 2 ** 32;
+
 has 'matrix' => (
     is       => 'ro',
     isa      => 'ArrayRef[ArrayRef[Int]]',
@@ -80,10 +82,16 @@ sub _build_linked_representation {
 
 sub choose_column {
     my ($self) = @_;
-    my $h = $self->linked_matrix;
-    # For now, we just make the simplest possible choice.
-    # We'll want to make this a Strategy later.
-    return $h->R;
+    my $r = $self->linked_matrix;
+    my $column_with_minimal_ones;
+    my $minimal_ones = INFINITY;
+    for (my $h = $r->R; $h ne $r; $h = $h->R) {
+        if ($minimal_ones > $h->S) {
+            $minimal_ones = $h->S;
+            $column_with_minimal_ones = $h;
+        }
+    }
+    return $column_with_minimal_ones;
 }
 
 sub cover_column {
