@@ -5,6 +5,8 @@ use Writer::Sudoku;
 package Reader::Sudoku;
 use Moose;
 
+extends 'Reader';
+
 has 'header' => (
     is       => 'ro',
     isa      => 'HashRef[Str]',

@@ -5,6 +5,8 @@ use Writer::Pentominoes;
 package Reader::Pentominoes;
 use Moose;
 
+extends 'Reader';
+
 has 'header' => (
     is       => 'ro',
     isa      => 'HashRef[Str]',
