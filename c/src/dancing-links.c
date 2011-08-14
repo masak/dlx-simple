@@ -137,7 +137,8 @@ struct solution_matrix_row *add_solution(solution_matrix *matrix) {
 }
 
 char *contents(struct solution_matrix_row *row) {
-    char *contents = malloc(50 * sizeof (char));
+    /* should really calculate string length here */
+    char *contents = malloc(200 * sizeof (char));
     struct solution_matrix_value *value = row->first_value;
     contents[0] = '\0';
 
