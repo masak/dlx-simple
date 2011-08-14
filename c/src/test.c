@@ -580,7 +580,7 @@ void test_that_identity_matrix_gives_all_lines() {
     add_dlx_value(dlx_row, 1);
     dlx_row = add_dlx_row(identity_matrix);
     add_dlx_value(dlx_row, 2);
-    
+
     solution = add_solution(all_lines);
     add_solution_value(solution, 0);
     add_solution_value(solution, 1);
@@ -607,7 +607,7 @@ void test_that_2_by_2_candidates_gives_4_solutions() {
     add_dlx_value(dlx_row, 1);
     dlx_row = add_dlx_row(two_by_two);
     add_dlx_value(dlx_row, 1);
-    
+
     solution = add_solution(four_solutions);
     add_solution_value(solution, 0);
     add_solution_value(solution, 2);
@@ -628,10 +628,110 @@ void test_that_2_by_2_candidates_gives_4_solutions() {
     destroy_dlx_matrix(two_by_two);
 }
 
+void test_same_rows_in_different_order() {
+    dlx_matrix *different_order = create_dlx_matrix();
+    struct dlx_matrix_row *dlx_row;
+    solution_matrix *four_solutions = create_solution_matrix();
+    struct solution_matrix_row *solution;
+
+    dlx_row = add_dlx_row(different_order);
+    add_dlx_value(dlx_row, 0);
+    dlx_row = add_dlx_row(different_order);
+    add_dlx_value(dlx_row, 1);
+    dlx_row = add_dlx_row(different_order);
+    add_dlx_value(dlx_row, 0);
+    dlx_row = add_dlx_row(different_order);
+    add_dlx_value(dlx_row, 1);
+
+    solution = add_solution(four_solutions);
+    add_solution_value(solution, 0);
+    add_solution_value(solution, 1);
+    solution = add_solution(four_solutions);
+    add_solution_value(solution, 0);
+    add_solution_value(solution, 3);
+    solution = add_solution(four_solutions);
+    add_solution_value(solution, 2);
+    add_solution_value(solution, 1);
+    solution = add_solution(four_solutions);
+    add_solution_value(solution, 2);
+    add_solution_value(solution, 3);
+
+    test_solve(different_order, four_solutions, "same rows in different order");
+
+    destroy_solution_matrix(four_solutions);
+    destroy_dlx_matrix(different_order);
+}
+
+void test_only_one_solution() {
+    dlx_matrix *two_lines = create_dlx_matrix();
+    struct dlx_matrix_row *dlx_row;
+    solution_matrix *one_solution = create_solution_matrix();
+    struct solution_matrix_row *solution;
+
+    dlx_row = add_dlx_row(two_lines);
+    add_dlx_value(dlx_row, 0);
+    add_dlx_value(dlx_row, 2);
+    dlx_row = add_dlx_row(two_lines);
+    add_dlx_value(dlx_row, 1);
+    add_dlx_value(dlx_row, 3);
+
+    solution = add_solution(one_solution);
+    add_solution_value(solution, 0);
+    add_solution_value(solution, 1);
+
+    test_solve(two_lines, one_solution, "only one solution");
+
+    destroy_solution_matrix(one_solution);
+    destroy_dlx_matrix(two_lines);
+}
+
+void test_knuths_example() {
+    dlx_matrix *knuths_input = create_dlx_matrix();
+    struct dlx_matrix_row *dlx_row;
+    solution_matrix *solutions = create_solution_matrix();
+    struct solution_matrix_row *solution;
+
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 2);
+    add_dlx_value(dlx_row, 4);
+    add_dlx_value(dlx_row, 5);
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 0);
+    add_dlx_value(dlx_row, 3);
+    add_dlx_value(dlx_row, 6);
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 1);
+    add_dlx_value(dlx_row, 2);
+    add_dlx_value(dlx_row, 5);
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 0);
+    add_dlx_value(dlx_row, 3);
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 1);
+    add_dlx_value(dlx_row, 6);
+    dlx_row = add_dlx_row(knuths_input);
+    add_dlx_value(dlx_row, 3);
+    add_dlx_value(dlx_row, 4);
+    add_dlx_value(dlx_row, 6);
+
+    solution = add_solution(solutions);
+    add_solution_value(solution, 3);
+    add_solution_value(solution, 4);
+    add_solution_value(solution, 0);
+
+    test_solve(knuths_input, solutions, "Knuth's example");
+
+    destroy_solution_matrix(solutions);
+    destroy_dlx_matrix(knuths_input);
+}
+
 int main(int argc, char **argv) {
     test_that_empty_matrix_gives_one_solution();
     test_that_identity_matrix_gives_all_lines();
     test_that_2_by_2_candidates_gives_4_solutions();
+    test_same_rows_in_different_order();
+    test_only_one_solution();
+    test_knuths_example();
 
     return EXIT_SUCCESS;
 }
