@@ -340,7 +340,17 @@ struct data_header *linked_representation(dlx_matrix *matrix) {
 }
 
 struct data_header *choose_column(struct data_header *root) {
-    return (struct data_header *)((struct data_object *)root)->R;
+    struct data_object *rdo = (struct data_object *)root;
+    struct data_object *column;
+    struct data_object *column_with_minimal_ones;
+    int minimal_ones = 32767;   /* (infinity) */
+    for (column = rdo->R; column != rdo; column = column->R) {
+        if (minimal_ones > ((struct data_header *)column)->S) {
+            minimal_ones = ((struct data_header *)column)->S;
+            column_with_minimal_ones = column;
+        }
+    }
+    return (struct data_header *)column_with_minimal_ones;
 }
 
 void cover_column(struct data_header *c) {
