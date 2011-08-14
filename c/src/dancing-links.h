@@ -69,6 +69,7 @@ solution_matrix *create_solution_matrix();
 void destroy_solution_matrix(solution_matrix *);
 
 struct solution_matrix_row *add_solution(solution_matrix *);
+char *contents(struct solution_matrix_row *);
 void destroy_solution_matrix_rows(struct solution_matrix_row *);
 
 void add_solution_value(struct solution_matrix_row *, int);

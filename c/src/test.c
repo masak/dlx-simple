@@ -27,27 +27,6 @@ int rows_are_equal(struct solution_matrix_row *actual_row,
     }
 }
 
-char *contents(struct solution_matrix_row *row) {
-    char *contents = malloc(50 * sizeof (char));
-    struct solution_matrix_value *value = row->first_value;
-    contents[0] = '\0';
-
-    strcat(contents, "[");
-    while (value != NULL) {
-        char *vstring = malloc(10 * sizeof(char));
-        sprintf(vstring, "%d", value->value);
-
-        strcat(contents, vstring);
-        value = value->next_value;
-        if (value != NULL) {
-            strcat(contents, ", ");
-        }
-    }
-    strcat(contents, "]");
-
-    return contents;
-}
-
 void output_eqv(solution_matrix *actual_output,
                 solution_matrix *expected_output,
                 char *description) {

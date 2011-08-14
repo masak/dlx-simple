@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "dancing-links.h"
 
@@ -132,6 +134,27 @@ struct solution_matrix_row *add_solution(solution_matrix *matrix) {
     }
 
     return new_row;
+}
+
+char *contents(struct solution_matrix_row *row) {
+    char *contents = malloc(50 * sizeof (char));
+    struct solution_matrix_value *value = row->first_value;
+    contents[0] = '\0';
+
+    strcat(contents, "[");
+    while (value != NULL) {
+        char *vstring = malloc(10 * sizeof(char));
+        sprintf(vstring, "%d", value->value);
+
+        strcat(contents, vstring);
+        value = value->next_value;
+        if (value != NULL) {
+            strcat(contents, ", ");
+        }
+    }
+    strcat(contents, "]");
+
+    return contents;
 }
 
 void add_solution_value(struct solution_matrix_row *row, int value) {

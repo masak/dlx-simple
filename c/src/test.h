@@ -5,7 +5,6 @@ int test_number = 0;
 
 int rows_are_equal(struct solution_matrix_row *,
                    struct solution_matrix_row *);
-char *contents(struct solution_matrix_row *);
 void output_eqv(solution_matrix *, solution_matrix *, char *);
 void test_solve(dlx_matrix *, solution_matrix *, char *);
 
