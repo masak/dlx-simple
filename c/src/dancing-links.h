@@ -101,10 +101,7 @@ struct data_header *choose_column(struct data_header *);
 void cover_column(struct data_header *);
 void uncover_column(struct data_header *);
 
-void solve_dancing_links_helper(
-    struct data_header *,
-    rows_stack *,
-    solution_matrix *);
-solution_matrix *solve_dancing_links(dlx_matrix *);
+void solve_dancing_links_helper(struct data_header *);
+long solve_dancing_links(dlx_matrix *);
 
 #endif
