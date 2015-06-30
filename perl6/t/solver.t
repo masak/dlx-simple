@@ -21,7 +21,7 @@ sub output_eqv(@actual, @expected, $description) {
         %expected{$canonical}++;
     }
 
-    is_deeply [%actual.keys.sort],
+    is-deeply [%actual.keys.sort],
               [%expected.keys.sort],
               $description;
 }
