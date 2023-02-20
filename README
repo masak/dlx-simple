@@ -47,3 +47,7 @@ and translate it to a boring matrix. The solution could then be mapped onto
 the original problem specification, making it extremely readable for the one
 specifying the problem. The boring matrices are error-prone and, well,
 boring. But this way, all the user sees is her own "views" of the problem.
+
+== A nice article with explanations
+
+https://louisabraham.github.io/articles/exact-cover
