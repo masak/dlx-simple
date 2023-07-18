@@ -1,4 +1,4 @@
-== Solver
+## Solver
 
 A `Solver` accepts a (sparse) exact cover matrix, and emits sets of row
 numbers from the provided matrix; each such set is an exact cover.
@@ -18,13 +18,13 @@ numbers from the provided matrix; each such set is an exact cover.
     # [0, 3]
     # [1, 2, 4]
 
-The `.new` method of a `Solver` optionally accepts a `Writer`, which
+The `.new` method of a `Solver` optionally accepts a `Decoder`, which
 will format the solutions in some way or other.
 
-    my $solver = Solver::DancingLinks.new(:$matrix, :$writer);
+    my $solver = Solver::DancingLinks.new(:$matrix, :$decoder);
 
-(See `04-writer.md` for more on `Writer`s, and `02-reader.md` for more
-on how to create them from a `Reader`.)
+(See `04-decoder.md` for more on `Decoder`s, and `02-encoder.md` for more
+on how to create them from an `Encoder`.)
 
 An optional integer argument `primaries` may be passed, which
 denotes how many of the columns in the matrix are to be considered
@@ -35,8 +35,8 @@ the first `$p` columns in the matrix primary columns, and the
 remaining columns secondary columns. If no such argument is passed in,
 it is assumed that all columns in the matrix are primary columns.
 
-Another optional argument `column_choice` denotes the way the next
+Another optional argument `column-choice` denotes the way the next
 column to cover is to be selected in the algorithm. The choice of column
 at each step can greatly affect the running time of the algorithm.
-`column_choice`, if passed, needs to be of type `ColumnChoice`. The
+`column-choice`, if passed, needs to be of type `ColumnChoice`. The
 default is `ColumnChoice::MinimizeOnes`.
