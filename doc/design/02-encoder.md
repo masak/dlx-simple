@@ -1,4 +1,4 @@
-## Reader
+## Encoder
 
 An `Encoder` accepts a human-readable problem description, and emits an
 exact cover matrix.
