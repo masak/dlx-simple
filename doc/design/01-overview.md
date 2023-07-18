@@ -12,17 +12,17 @@ rows back into a form that looks very similar to the specified problem.
 
 In summary, the data flows like this through the appliction:
 
-                         sparse
-     human-             zero-one         set of                human-
-    readable             matrix           rows                readable
-     input ====[ Reader ]====> [ Solver ] =====[ Writer ]====> output
+                          sparse
+     human-              zero-one         set of                 human-
+    readable              matrix           rows                 readable
+     input ====[ Encoder ]====> [ Solver ] =====[ Decoder ]====> output
 
 In mathematical terms, this could be seen as solving the problem under a
 transform:
 
     human    parsing   algorithm
     input ===========>   input
-           [ Reader ]
+          [ Encoder ]
                            ||
                            ||
                        [ Solver ]
@@ -32,7 +32,7 @@ transform:
     
     human    rendering  algorithm
     output <===========   output
-            [ Writer ]
+            [ Decoder ]
 
 The downwards arrow on the right is what the computer is good at. The
 *missing* downwards arrow on the left is the function we (as humans) are
